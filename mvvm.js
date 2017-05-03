@@ -61,7 +61,7 @@ var attrRE    = /([^\s]+)=(\"([^\"]+)?\")/g,
 var attrMapping = {
 	class: 'className'
 };
-function resolve(parent) {
+function resolve(parent, idx) {
 	var tagName = parent.tagName;
 	if (tagName) {
 		var opts   = { attr: {} },
@@ -83,18 +83,18 @@ function resolve(parent) {
 			});
 		}
 		if (forVal) {
-			debugger;
+			// debugger;
 			var mat = forVal.match(/([a-zA-Z_$]([^\s]+)?)\s+in\s+(([^\s]+)?)/),
 				arr = mat[3],
 				key = mat[1];
-			var fn  = 'for(' + key + ' in this[0].' + arr + ') {console.log(' + key + ')}';
+			var fn  = 'for(' + key + ' in this.' + arr + ') {console.log(' + key + ')}';
 			console.log(fn);
-			new Function(fn).call([data, ]);
+			new Function(fn).call(data);
 			console.log(arr);
 		}
-		for (var _ of nodes) {
+		nodes.forEach(function(_) {
 			result.push(resolve(_));
-		}
+		});
 		opts.tag = tagName;
 		opts.child = result;
 		return opts;
