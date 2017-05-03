@@ -79,18 +79,22 @@ function resolve(parent, idx) {
 				k = attrMapping[k] || k;
 				v = v? v: true;
 				forVal = k === 'j-for'? v: 0;
-				attr[k] = v;
+				if (!/j-/.test(k)) attr[k] = v;
 			});
 		}
 		if (forVal) {
-			// debugger;
+			debugger;
+			console.log(parent.outerHTML);
 			var mat = forVal.match(/([a-zA-Z_$]([^\s]+)?)\s+in\s+(([^\s]+)?)/),
 				arr = mat[3],
 				key = mat[1];
-			var fn  = 'for(' + key + ' in this.' + arr + ') {console.log(' + key + ')}';
-			console.log(fn);
-			new Function(fn).call(data);
-			console.log(arr);
+			var array = getData(arr);
+			if (array) {
+				array.map(function(_,__) {
+					console.log(_,__);
+				})
+				console.log(array)
+			}
 		}
 		nodes.forEach(function(_) {
 			result.push(resolve(_));
