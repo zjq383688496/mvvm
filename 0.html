@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+</head>
+<body>
+
+<div id="app">
+	<p>名称: {{  name  }}</p>
+	<p>年龄: {{info.age}}</p>
+	<p>年龄: {{info.zzz}}</p>
+	<ul id="skill" t1="jimmy" name="zjq" class="t1 t2">
+		<li j-for="li in info.skill">{{li}}</li>
+	</ul>
+	<input type="text" name="nnn" disabled>
+</div>
+
+<script src="mvvm.js"></script>
+<script>
+var obj = {
+	name: 'jimmy',
+	info: {
+		age: 30,
+		skill: ['js', 'css', 'html']
+	}
+}
+
+// JM.observe(obj);
+JM.init({
+	el: '#app',
+	data: obj
+});
+
+</script>
+</body>
+</html>
