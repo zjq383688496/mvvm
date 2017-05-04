@@ -56,8 +56,8 @@ function analysis() {
 	var result = resolve(div).child;
 	console.log(result);
 }
-var attrRE    = /([^\s]+)=(\"([^\"]+)?\")/g,
-	attrKeyRE = /([^\s]+)=(\"([^\"]+)?\")/;
+var attrRE    = /([^\s]+)=\"([^\"]*)\"/g,
+	attrKeyRE = /([^\s]+)=\"([^\"]*)\"/;
 var attrMapping = {
 	class: 'className'
 };
@@ -75,7 +75,7 @@ function resolve(parent, idx) {
 			labStr.map(function(_) {
 				var __ = _.match(attrKeyRE);
 					k  = __[1],
-					v  = __[3];
+					v  = __[2];
 				k = attrMapping[k] || k;
 				v = v? v: true;
 				forVal = k === 'j-for'? v: 0;
@@ -83,10 +83,10 @@ function resolve(parent, idx) {
 			});
 		}
 		if (forVal) {
-			debugger;
+			// debugger;
 			console.log(parent.outerHTML);
-			var mat = forVal.match(/([a-zA-Z_$]([^\s]+)?)\s+in\s+(([^\s]+)?)/),
-				arr = mat[3],
+			var mat = forVal.match(/([a-zA-Z_$][^\s]*)\s+in\s+([^\s]*)/),
+				arr = mat[2],
 				key = mat[1];
 			var array = getData(arr);
 			if (array) {
@@ -96,6 +96,7 @@ function resolve(parent, idx) {
 				console.log(array)
 			}
 		}
+		nodes = resolveEach(nodes);
 		nodes.forEach(function(_) {
 			result.push(resolve(_));
 		});
@@ -105,6 +106,28 @@ function resolve(parent, idx) {
 	} else {
 		return parent.data;
 	}
+}
+function resolveEach(nodes) {
+	// debugger;
+	// console.log(nodes);
+	nodes.forEach(function(_) {
+		var tagName = _.tagName;
+		if (tagName) {
+			var lab = _.outerHTML.match(/^\<.*?\>/)[0].match(/j-for=\"([^\"]*)\"/);
+			if (lab && lab.length) {
+				var tmp = _.outerHTML;
+				var mat = lab[1].match(/([a-zA-Z_$][^\s]*)\s+in\s+([^\s]*)/),
+					arr = mat[2],
+					key = mat[1],
+					result = [];
+
+				var array = getData(arr);
+				console.log('_')
+				console.log(lab);
+			}
+		}
+	});
+	return nodes;
 }
 function update() {
 	var html = template;
